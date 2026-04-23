@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserRequestDto } from './dto/create-user.request.dto';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
@@ -8,7 +12,12 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(dto: CreateUserRequestDto): Promise<User> {
-    // TODO - 이메일 중복 확인 코드추가
+    const existingUser = await this.usersRepository.findUserByEmail(dto.email);
+
+    if (existingUser) {
+      throw new ConflictException(`Email ${dto.email} already exists`);
+    }
+
     return this.usersRepository.createUser(dto);
   }
 
