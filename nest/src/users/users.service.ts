@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserRequestDto } from './dto/create-user.request.dto';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
@@ -10,5 +10,15 @@ export class UsersService {
   async createUser(dto: CreateUserRequestDto): Promise<User> {
     // TODO - 이메일 중복 확인 코드추가
     return this.usersRepository.createUser(dto);
+  }
+
+  async findUser(id: number): Promise<User> {
+    const user = await this.usersRepository.findUserById(id);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return user;
   }
 }
