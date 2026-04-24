@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Task } from '../../tasks/entities/task.entity';
 
 @Entity()
 export class User {
@@ -10,4 +18,13 @@ export class User {
 
   @Column({ unique: true })
   email!: string;
+
+  @OneToMany(() => Task, (task) => task.assignee)
+  tasks!: Task[];
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }
