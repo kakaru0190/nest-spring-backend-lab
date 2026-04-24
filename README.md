@@ -13,16 +13,36 @@
 
 이 10개는 단순 CRUD가 아니라 다음 흐름을 따른다:
 
-1. 입력/검증 (Nest <input type="checkbox" checked>, Spring <input type="checkbox" disabled>)
-2. 조회 (Nest <input type="checkbox" checked>, Spring <input type="checkbox" disabled>)
-3. 비즈니스 로직 (Nest <input type="checkbox" checked>, Spring <input type="checkbox" disabled>)
-4. 상태 변화 (Nest <input type="checkbox" checked>, Spring <input type="checkbox" disabled>)
-5. 조건 조회 (Nest <input type="checkbox" disabled>, Spring <input type="checkbox" disabled>)
-6. 성능, 페이징 (Nest <input type="checkbox" disabled>, Spring <input type="checkbox" disabled>)
-7. 연관관계 (Nest <input type="checkbox" disabled>, Spring <input type="checkbox" disabled>)
-8. 데이터 관리 전략 (Nest <input type="checkbox" disabled>, Spring <input type="checkbox" disabled>)
-9. 권한 (Nest <input type="checkbox" disabled>, Spring <input type="checkbox" disabled>)
-10. 트랜잭션 (Nest <input type="checkbox" disabled>, Spring <input type="checkbox" disabled>)
+- 입력/검증 
+- [x] Nest
+- [ ] Spring
+- 조회 
+- [x] Nest
+- [ ] Spring 
+- 비즈니스 로직 
+- [x] Nest
+- [ ] Spring
+- 상태 변화 
+- [x] Nest
+- [ ] Spring
+- 조건 조회 
+- [ ] Nest
+- [ ] Spring
+- 성능, 페이징 
+- [ ] Nest
+- [ ] Spring
+- 연관관계 
+- [ ] Nest
+- [ ] Spring
+- 데이터 관리 전략 
+- [ ] Nest
+- [ ] Spring
+- 권한 
+- [ ] Nest
+- [ ] Spring
+- 트랜잭션 
+- [ ] Nest
+- [ ] Spring
 
 ---
 
