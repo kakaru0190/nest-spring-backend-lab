@@ -12,6 +12,21 @@ export class TasksRepository {
     private readonly tasksRepository: Repository<Task>,
   ) {}
 
+  async findTaskById(taskId: number): Promise<Task | null> {
+    return this.tasksRepository.findOne({
+      where: { id: taskId },
+    });
+  }
+
+  async findTaskByIdWithAssignee(taskId: number): Promise<Task | null> {
+    return this.tasksRepository.findOne({
+      where: { id: taskId },
+      relations: {
+        assignee: true,
+      },
+    });
+  }
+
   async createTask(dto: CreateTaskRequestDto): Promise<Task> {
     const result = await this.tasksRepository.insert({
       title: dto.title,
@@ -35,5 +50,9 @@ export class TasksRepository {
     }
 
     return task;
+  }
+
+  async updateTaskStatus(taskId: number, status: TaskStatus): Promise<void> {
+    await this.tasksRepository.update({ id: taskId }, { status });
   }
 }
