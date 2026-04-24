@@ -39,10 +39,12 @@ describe('UsersService', () => {
         name: 'ys',
         email: 'ys@example.com',
       };
-      const savedUser: User = {
+      const savedUser = {
         id: 1,
         name: 'ys',
         email: 'ys@example.com',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       usersRepository.findUserByEmail.mockResolvedValue(null);
@@ -60,10 +62,12 @@ describe('UsersService', () => {
         name: 'ys',
         email: 'ys@example.com',
       };
-      const existingUser: User = {
+      const existingUser = {
         id: 1,
         name: 'existing',
         email: 'ys@example.com',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       usersRepository.findUserByEmail.mockResolvedValue(existingUser);
@@ -78,10 +82,12 @@ describe('UsersService', () => {
 
   describe('findUser', () => {
     it('정상 처리', async () => {
-      const user: User = {
+      const user = {
         id: 1,
         name: 'ys',
         email: 'ys@example.com',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       usersRepository.findUserById.mockResolvedValue(user);
