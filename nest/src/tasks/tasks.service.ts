@@ -29,7 +29,17 @@ export class TasksService {
       throw new NotFoundException(`User with id ${dto.userId} not found`);
     }
 
-    return this.tasksRepository.createTask(dto);
+    const taskId = await this.tasksRepository.createTask(dto);
+
+    const task = await this.tasksRepository.findTaskByIdWithAssignee(taskId);
+
+    if (!task) {
+      throw new InternalServerErrorException(
+        'Task was created but could not be loaded',
+      );
+    }
+
+    return task;
   }
 
   async changeTaskStatus(

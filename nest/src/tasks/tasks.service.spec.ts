@@ -83,12 +83,16 @@ describe('TasksService', () => {
       };
 
       usersRepository.findUserById.mockResolvedValue(user);
-      tasksRepository.createTask.mockResolvedValue(savedTask);
+      tasksRepository.createTask.mockResolvedValue(savedTask.id);
+      tasksRepository.findTaskByIdWithAssignee.mockResolvedValue(savedTask);
 
       const result = await tasksService.createTask(dto);
 
       expect(usersRepository.findUserById).toHaveBeenCalledWith(dto.userId);
       expect(tasksRepository.createTask).toHaveBeenCalledWith(dto);
+      expect(tasksRepository.findTaskByIdWithAssignee).toHaveBeenCalledWith(
+        savedTask.id,
+      );
       expect(result).toEqual(savedTask);
     });
 

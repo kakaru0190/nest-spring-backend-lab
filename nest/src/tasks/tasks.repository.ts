@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
@@ -27,7 +27,7 @@ export class TasksRepository {
     });
   }
 
-  async createTask(dto: CreateTaskRequestDto): Promise<Task> {
+  async createTask(dto: CreateTaskRequestDto): Promise<number> {
     const result = await this.tasksRepository.insert({
       title: dto.title,
       description: dto.description ?? null,
@@ -35,21 +35,7 @@ export class TasksRepository {
       dueDate: dto.dueDate,
       assigneeId: dto.userId,
     });
-
-    const task = await this.tasksRepository.findOne({
-      where: { id: result.identifiers[0].id },
-      relations: {
-        assignee: true,
-      },
-    });
-
-    if (!task) {
-      throw new InternalServerErrorException(
-        'Task was created but could not be loaded',
-      );
-    }
-
-    return task;
+    return result.identifiers[0].id;
   }
 
   async updateTaskStatus(taskId: number, status: TaskStatus): Promise<void> {
