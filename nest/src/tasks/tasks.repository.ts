@@ -27,6 +27,21 @@ export class TasksRepository {
     });
   }
 
+  async findTasksByCondition(
+    userId: number,
+    status?: TaskStatus,
+  ): Promise<Task[]> {
+    return this.tasksRepository.find({
+      where: {
+        assigneeId: userId,
+        ...(status ? { status } : {}),
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
   async createTask(dto: CreateTaskRequestDto): Promise<number> {
     const result = await this.tasksRepository.insert({
       title: dto.title,

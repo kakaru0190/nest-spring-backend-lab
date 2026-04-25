@@ -1,19 +1,31 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskRequestDto } from './dto/create-task.request.dto';
 import { TaskResponseDto } from './dto/task.response.dto';
 import { ChangeTaskStatusRequestDto } from './dto/change-task-status.request.dto';
+import { FindTasksQueryDto } from './dto/find-tasks.query.dto';
+import { TaskListItemResponseDto } from './dto/task-list-item.response.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
+
+  @Get()
+  async findTasks(
+    @Query() query: FindTasksQueryDto,
+  ): Promise<TaskListItemResponseDto[]> {
+    const tasks = await this.tasksService.findTasks(query);
+    return tasks.map((task) => new TaskListItemResponseDto(task));
+  }
 
   @Post()
   async createTask(

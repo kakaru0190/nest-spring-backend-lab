@@ -10,6 +10,7 @@ import { Task } from './entities/task.entity';
 import { UsersRepository } from '../users/users.repository';
 import { ChangeTaskStatusRequestDto } from './dto/change-task-status.request.dto';
 import { TaskStatus } from './entities/task-status.enum';
+import { FindTasksQueryDto } from './dto/find-tasks.query.dto';
 
 @Injectable()
 export class TasksService {
@@ -17,6 +18,13 @@ export class TasksService {
     private readonly tasksRepository: TasksRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
+
+  async findTasks(query: FindTasksQueryDto): Promise<Task[]> {
+    return this.tasksRepository.findTasksByCondition(
+      query.assigneeId,
+      query.status,
+    );
+  }
 
   async createTask(dto: CreateTaskRequestDto): Promise<Task> {
     if (dto.dueDate.getTime() < Date.now()) {
