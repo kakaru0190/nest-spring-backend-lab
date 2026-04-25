@@ -12,11 +12,13 @@ import { Task } from './entities/task.entity';
 import { TaskStatus } from './entities/task-status.enum';
 import { User } from '../users/entities/user.entity';
 import { ChangeTaskStatusRequestDto } from './dto/change-task-status.request.dto';
+import { FindTasksQueryDto } from './dto/find-tasks.query.dto';
 
 describe('TasksService', () => {
   let tasksService: TasksService;
   let tasksRepository: {
     createTask: jest.Mock;
+    findTasksByCondition: jest.Mock;
     findTaskById: jest.Mock;
     findTaskByIdWithAssignee: jest.Mock;
     updateTaskStatus: jest.Mock;
@@ -28,6 +30,7 @@ describe('TasksService', () => {
   beforeEach(async () => {
     tasksRepository = {
       createTask: jest.fn(),
+      findTasksByCondition: jest.fn(),
       findTaskById: jest.fn(),
       findTaskByIdWithAssignee: jest.fn(),
       updateTaskStatus: jest.fn(),
@@ -126,6 +129,81 @@ describe('TasksService', () => {
       );
       expect(usersRepository.findUserById).toHaveBeenCalledWith(dto.userId);
       expect(tasksRepository.createTask).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('findTasks', () => {
+    it('담당자 기준으로 작업 목록 조회', async () => {
+      const query: FindTasksQueryDto = {
+        assigneeId: 1,
+      };
+      const tasks: Task[] = [
+        {
+          id: 2,
+          title: 'second task',
+          description: null,
+          status: TaskStatus.IN_PROGRESS,
+          dueDate: new Date('2099-12-30T00:00:00.000Z'),
+          assigneeId: 1,
+          assignee: {
+            id: 1,
+            name: 'ys',
+            email: 'ys@example.com',
+            tasks: [],
+            createdAt: new Date('2099-01-01T00:00:00.000Z'),
+            updatedAt: new Date('2099-01-01T00:00:00.000Z'),
+          },
+          createdAt: new Date('2099-01-02T00:00:00.000Z'),
+          updatedAt: new Date('2099-01-02T00:00:00.000Z'),
+        },
+      ];
+
+      tasksRepository.findTasksByCondition.mockResolvedValue(tasks);
+
+      const result = await tasksService.findTasks(query);
+
+      expect(tasksRepository.findTasksByCondition).toHaveBeenCalledWith(
+        query.assigneeId,
+        undefined,
+      );
+      expect(result).toEqual(tasks);
+    });
+
+    it('담당자와 상태 기준으로 작업 목록 조회', async () => {
+      const query: FindTasksQueryDto = {
+        assigneeId: 1,
+        status: TaskStatus.TODO,
+      };
+      const tasks: Task[] = [
+        {
+          id: 1,
+          title: 'first task',
+          description: 'task description',
+          status: TaskStatus.TODO,
+          dueDate: new Date('2099-12-31T00:00:00.000Z'),
+          assigneeId: 1,
+          assignee: {
+            id: 1,
+            name: 'ys',
+            email: 'ys@example.com',
+            tasks: [],
+            createdAt: new Date('2099-01-01T00:00:00.000Z'),
+            updatedAt: new Date('2099-01-01T00:00:00.000Z'),
+          },
+          createdAt: new Date('2099-01-01T00:00:00.000Z'),
+          updatedAt: new Date('2099-01-01T00:00:00.000Z'),
+        },
+      ];
+
+      tasksRepository.findTasksByCondition.mockResolvedValue(tasks);
+
+      const result = await tasksService.findTasks(query);
+
+      expect(tasksRepository.findTasksByCondition).toHaveBeenCalledWith(
+        query.assigneeId,
+        query.status,
+      );
+      expect(result).toEqual(tasks);
     });
   });
 
